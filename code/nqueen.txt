@@ -1,0 +1,18 @@
+def iterative(self):
+        queen_on_board = 0
+        for row in range(self.N):
+            for col in range(self.N):
+                self.board[row][col] = 'Q'
+                queen_on_board = queen_on_board + 1
+                print ("(row,col) : ", row, col)
+                squares_list = self.get_posible_safe_squares(row,col)
+                for square in squares_list:
+                    for x,y in square.items():
+                        if self.isTheQueenSafe(x,y):
+                            self.board[x][y] = 'Q'
+                            queen_on_board = queen_on_board + 1
+                print ("Queen on board", queen_on_board)
+                if queen_on_board == 4:
+                    self.print_the_board()
+                self.reset_the_board()
+                queen_on_board = 0
