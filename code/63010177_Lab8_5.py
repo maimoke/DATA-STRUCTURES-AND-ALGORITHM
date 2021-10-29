@@ -66,7 +66,7 @@ class Tree:
 
             else:
 
-                print(max_node-((max_node-(pow(2,h)-1))/2))
+                #print(max_node-((max_node-(pow(2,h)-1))/2))
 
                 if self.num+1 <= max_node-((max_node-(pow(2,h)-1))/2):
 
@@ -158,9 +158,32 @@ def printTree90(node, level = 0):
 
 
 
-def check_binary_search_tree_(root):
-
-    pass
+def check_binary_search_tree_(root,ignore=[]):
+    for i in range(len(ignore)):
+        for j in range(len(ignore)-i-1):
+            if ignore[i]==ignore[j+i+1]:
+                return False
+    ignore.append(root.data)
+    if root.left and root.right is not None:
+        if root.right.data > root.data and root.left.data < root.data and root.data>=0 and root.data<=100:
+            return check_binary_search_tree_(root.left,ignore) and check_binary_search_tree_(root.right,ignore) and True
+        else:
+            return False
+    elif root.left is not None:
+        if root.left.data < root.data and root.data>=0 and root.data<=100:
+            return check_binary_search_tree_(root.left,ignore) and True
+        else :
+            return False
+    elif root.right is not None:
+        if root.right.data > root.data and root.data>=0 and root.data<=100:
+            return check_binary_search_tree_(root.right,ignore) and True
+        else:
+            return False
+    else:
+        if root.data>=0 and root.data<=100:
+            return True
+        else :
+            return False
 
 tree = Tree()
 
