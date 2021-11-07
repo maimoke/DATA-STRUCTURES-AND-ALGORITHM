@@ -1,175 +1,74 @@
 class Node:
-
-    def __init__(self, data): 
-
-        self.data = data  
-
-        self.left = None  
-
-        self.right = None 
-
-        self.level = None 
-
-
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
 
     def __str__(self):
-
-        return str(self.data) 
-
+        return str(self.data)
 
 
-class Tree:
-
-    def __init__(self): 
-
+class BST:
+    def __init__(self):
         self.root = None
 
-        self.num = 0
-
-
-
-    def insert(self, val):  
-
-        if self.root == None:
-
-            self.root = Node(val)
-
-            self.num += 1
-
+    def insert(self, data):
+        n = Node(data)
+        if self.root is None:
+            self.root = n
         else:
-
-            h = height(self.root)
-
-            max_node = pow(2,h+1)-1
-
-            current = self.root
-
-            if self.num+1 > max_node:
-
-                while(current.left != None):
-
-                    current = current.left
-
-                current.left = Node(val)
-
-                self.num+=1
-
-            elif self.num+1 == max_node:
-
-                while(current.right != None):
-
-                    current = current.right
-
-                current.right = Node(val)
-
-                self.num+=1
-
-            else:
-
-                print(max_node-((max_node-(pow(2,h)-1))/2))
-
-                if self.num+1 <= max_node-((max_node-(pow(2,h)-1))/2):
-
-                    insert_subtree(current.left,self.num - round(pow(2,h)/2),val)
-
+            new = self.root
+            while(True):
+                if new.data > data:
+                    if new.left is not None:
+                        new = new.left
+                    else:
+                        new.left = n
+                        break
                 else:
+                    if new.right is not None:
+                        new = new.right
+                    else:
+                        new.right = n
+                        break
+        return self.root
 
-                    insert_subtree(current.right,self.num - pow(2,h),val)
+    def printTree(self, node, level=0):
+        if node != None:
+            self.printTree(node.right, level + 1)
+            print('     ' * level, node)
+            self.printTree(node.left, level + 1)
 
-                self.num+=1
-
-                    
-
-def insert_subtree(r,num,val):
-
-    if r != None:
-
-        h = height(r)
-
-        max_node = pow(2,h+1)-1
-
-        current = r
-
-        if num+1 > max_node:
-
-            while(current.left != None):
-
-                current = current.left
-
-            current.left = Node(val)
-
-            return
-
-        elif num+1 == max_node:
-
-            while(current.right != None):
-
-                current = current.right
-
-            current.right = Node(val)
-
-            return
-
-        if num+1 <= max_node-((max_node-(pow(2,h)-1))/2):
-
-            insert_subtree(current.left,num - round(pow(2,h)/2),val)
-
+    def height(self, node):
+        if node is None:
+            return -1
         else:
 
-            insert_subtree(current.right,num - pow(2,h),val)
+            leftda = self.height(node.left)
+            rightda = self.height(node.right)
 
-    else:
+            if (leftda > rightda):
+                return leftda+1
+            else:
+                return rightda+1
 
-        return
-
-
-
-def height(root):
-
-    if root == None:
-
-        return -1
-
-    else:
-
-        left = height(root.left)
-
-        right = height(root.right)
-
-        if left>right:
-
-            return left + 1
-
-        else:
-
-            return right + 1
-
-                       
-
-def printTree90(node, level = 0):
-
-    if node != None:
-
-        printTree90(node.right, level + 1)
-
-        print('     ' * level, node)
-
-        printTree90(node.left, level + 1)
+    def checknum(self, node, data, num=0):
+        if node != None:
+            num=self.checknum(node.left,data,num)
+            if node.data <= data:
+                num+=1
+            num=self.checknum(node.right,data,num)
+        หี="หี"
+        print(หี)
+        return num
 
 
+T = BST()
 
-def check_binary_search_tree_(root):
+inp, n = [i.split() for i in input('Enter Input : ').split('/')]
 
-    pass
-
-tree = Tree()
-
-data = input("Enter Input : ").split()
-
-for e in data:
-
-    tree.insert(int(e))
-
-printTree90(tree.root)
-
-print(check_binary_search_tree_(tree.root))
+for i in inp:
+    root = T.insert(int(i))
+T.printTree(root)
+print("--------------------------------------------------")
+print(T.checknum(root, int(n[0])))
