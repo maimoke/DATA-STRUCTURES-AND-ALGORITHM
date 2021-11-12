@@ -67,6 +67,12 @@ if __name__=="__main__":
     maxColli=int(maxColli)
     threshold=int(threshold)
     inp[1]=inp[1].split(" ")
-    h=hash(200,maxColli,threshold)
+    h=hash(size,maxColli,threshold)
     print("Initial Table :")
     print(h,end="")
+    print("----------------------------------------")
+    for i in inp[1]:
+        print("Add : {}".format(i))
+        h.insert(int(i))
+        print(h,end="")
+        print("----------------------------------------")
