@@ -11,6 +11,7 @@ class hash:
         self.maxColli=maxColli
         self.threshold=threshold
         self.table=[]
+        self.added=[]
         for i in range(size):
             self.table.append(None)
     def __str__(self):
@@ -18,6 +19,7 @@ class hash:
         for i in range(self.size):
             s=s+"#"+str(i+1)+"\t"+str(self.table[i])+"\n"
         return s
+
     def insert(self,value):
         #key
         originalkeySum=value
@@ -46,11 +48,13 @@ class hash:
             else:
                 self.table[keySum%self.size]=Data(value)
                 break
+    
     def rehash(self):
-        temp=self.size
         self.size=self.size*2
         while not self.primeCheck(self.size):
             self.size+=1
+        self.table=[None for i in range(self.size)]
+
             
     def primeCheck(self,num):
         prime = True
