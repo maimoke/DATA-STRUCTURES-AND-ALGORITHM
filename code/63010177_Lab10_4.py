@@ -1,82 +1,71 @@
-class Data:
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return str(self.value)
-
-class hash:
-    def __init__(self,size,maxColli,threshold):
-        self.size =size
-        self.maxColli=maxColli
-        self.threshold=threshold
+class hashtable():
+    def __init__(self,size,MaxCollision,Threshold):
+        self.size=size
+        self.MaxCollision=MaxCollision
+        self.Threshold=Threshold
+        self.dataSize=0
         self.table=[]
         self.added=[]
-        for i in range(size):
+        for _ in range(10000):
             self.table.append(None)
     def __str__(self):
         s=""
         for i in range(self.size):
             s=s+"#"+str(i+1)+"\t"+str(self.table[i])+"\n"
-        return s
-
-    def insert(self,value):
-        #key
-        originalkeySum=value
-        colliCounter=0
-        keySum=originalkeySum
-        checker=int(value*100/self.size)
-        while True:
-            if self.table[keySum%self.size] is not None:
-                colliCounter+=1
-                print("collision number {} at {}".format(colliCounter,(keySum%self.size)))
-                #collision case
-                if colliCounter==self.maxColli:
+        return s[:-1]
+    def thresholdCheck(self,data):
+        if float(self.dataSize+1)/float(self.size)*100>self.Threshold:
+            print("****** Data over threshold - Rehash !!! ******")
+            self.rehash()
+    def add(self,data,re=False):
+        self.thresholdCheck(data)
+        index=data
+        collisiontime=0
+        oindex=index
+        index=index%self.size
+        while (self.table[index] is not None):
+            collisiontime+=1
+            print("collision number {} at {}".format(collisiontime,index))
+            if collisiontime==self.MaxCollision:
+                if re==False:
                     print("****** Max collision - Rehash !!! ******")
-                    self.rehash()
-                    self.table[keySum%self.size]=Data(value)
-                    break
-                else:
-                    keySum=originalkeySum+colliCounter*colliCounter
-                    continue
-            #threshold case
-            elif checker>=self.threshold:
-                print("****** Data over threshold - Rehash !!! ******")
                 self.rehash()
-                self.table[keySum%self.size]=Data(value)
-                break
-            else:
-                self.table[keySum%self.size]=Data(value)
-                break
-    
+                collisiontime=0
+            index=oindex+collisiontime*collisiontime
+            index=index%self.size
+        self.table[index]=data
+        if re==False:
+            self.added.append(data)
+            self.dataSize+=1
     def rehash(self):
         self.size=self.size*2
-        while not self.primeCheck(self.size):
+        while not self.isPrime(self.size):
             self.size+=1
-        self.table=[None for i in range(self.size)]
-
-            
-    def primeCheck(self,num):
-        prime = True
-        for i in range(2, num):
-            if (num % i) == 0:
-                prime = False
-                break
-        return prime
-if __name__=="__main__":
-    print(" ***** Rehashing *****")
-    inp =input("Enter Input : ").split("/")
-    size,maxColli,threshold=inp[0].split(" ")
-    size=int(size)
-    maxColli=int(maxColli)
-    threshold=int(threshold)
-    inp[1]=inp[1].split(" ")
-    h=hash(size,maxColli,threshold)
-    print("Initial Table :")
-    print(h,end="")
+        self.table=[]
+        for _ in range(10000):
+            self.table.append(None)
+        for i in self.added:
+            self.add(i,True)
+    def isPrime(self,num):
+        for i in range(num-2):
+            if num%(i+2)==0:
+                return False
+        return True       
+print(" ***** Rehashing *****")
+inp = input("Enter Input : ").split("/")
+size,MaxCollision,Threshold=inp[0].split(" ")
+size = int(size)
+MaxCollision = int(MaxCollision)
+Threshold = int(Threshold)
+t = hashtable(size,MaxCollision,Threshold)
+print("Initial Table :")
+print(t)
+print("----------------------------------------")
+add=[]
+for i in inp[1].split(" "):
+    add.append(int(i))
+for i in add:
+    print("Add : {}".format(i))
+    t.add(i)
+    print(t)
     print("----------------------------------------")
-    for i in inp[1]:
-        print("Add : {}".format(i))
-        h.insert(int(i))
-        print(h,end="")
-        print("----------------------------------------")
